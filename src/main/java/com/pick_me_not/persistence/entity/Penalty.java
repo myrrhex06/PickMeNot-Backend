@@ -1,6 +1,5 @@
-package com.pick_me_not.domain.penalty;
+package com.pick_me_not.persistence.entity;
 
-import com.pick_me_not.domain.room.Room;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

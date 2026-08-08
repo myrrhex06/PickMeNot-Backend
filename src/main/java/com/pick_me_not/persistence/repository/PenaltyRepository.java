@@ -1,5 +1,6 @@
-package com.pick_me_not.domain.penalty;
+package com.pick_me_not.persistence.repository;
 
+import com.pick_me_not.persistence.entity.Penalty;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

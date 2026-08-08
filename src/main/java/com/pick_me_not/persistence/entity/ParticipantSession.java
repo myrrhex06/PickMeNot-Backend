@@ -1,6 +1,5 @@
-package com.pick_me_not.domain.session;
+package com.pick_me_not.persistence.entity;
 
-import com.pick_me_not.domain.participant.Participant;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,18 +9,16 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Entity
 @Table(name = "participant_sessions")
 @Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ParticipantSession {
 
 	@Id
@@ -43,4 +40,17 @@ public class ParticipantSession {
 
 	@Column(name = "revoked_at")
 	private LocalDateTime revokedAt;
+
+	private ParticipantSession(Participant participant, String tokenHash,
+			LocalDateTime issuedAt, LocalDateTime expiresAt) {
+		this.participant = participant;
+		this.tokenHash = tokenHash;
+		this.issuedAt = issuedAt;
+		this.expiresAt = expiresAt;
+	}
+
+	public static ParticipantSession issue(Participant participant, String tokenHash,
+			LocalDateTime issuedAt, LocalDateTime expiresAt) {
+		return new ParticipantSession(participant, tokenHash, issuedAt, expiresAt);
+	}
 }

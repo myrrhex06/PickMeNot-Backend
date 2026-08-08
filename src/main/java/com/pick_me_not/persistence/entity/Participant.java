@@ -1,6 +1,5 @@
-package com.pick_me_not.domain.participant;
+package com.pick_me_not.persistence.entity;
 
-import com.pick_me_not.domain.room.Room;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -11,7 +10,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -19,10 +20,7 @@ import java.time.LocalDateTime;
 @Table(name = "participants", uniqueConstraints =
 		@UniqueConstraint(name = "uk_participants_room_nickname", columnNames = {"room_id", "nickname"}))
 @Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Participant {
 
 	@Id
@@ -47,4 +45,17 @@ public class Participant {
 
 	@Column(name = "last_seen_at", nullable = false)
 	private LocalDateTime lastSeenAt;
+
+	private Participant(Room room, String nickname, boolean host, LocalDateTime joinedAt) {
+		this.room = room;
+		this.nickname = nickname;
+		this.host = host;
+		this.connected = true;
+		this.joinedAt = joinedAt;
+		this.lastSeenAt = joinedAt;
+	}
+
+	public static Participant createHost(Room room, String nickname, LocalDateTime joinedAt) {
+		return new Participant(room, nickname, true, joinedAt);
+	}
 }

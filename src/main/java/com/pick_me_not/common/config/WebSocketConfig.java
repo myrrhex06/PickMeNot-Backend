@@ -1,4 +1,4 @@
-package com.pick_me_not.config;
+package com.pick_me_not.common.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;

@@ -1,4 +1,4 @@
-package com.pick_me_not.domain.room;
+package com.pick_me_not.common.enums;
 
 public enum RoomStatus {
 	WAITING,

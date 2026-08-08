@@ -1,5 +1,6 @@
-package com.pick_me_not.domain.roulette;
+package com.pick_me_not.persistence.repository;
 
+import com.pick_me_not.persistence.entity.RouletteRound;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

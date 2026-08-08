@@ -1,5 +1,6 @@
-package com.pick_me_not.domain.room;
+package com.pick_me_not.persistence.repository;
 
+import com.pick_me_not.persistence.entity.Room;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;

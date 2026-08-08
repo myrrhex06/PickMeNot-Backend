@@ -1,5 +1,6 @@
-package com.pick_me_not.domain.participant;
+package com.pick_me_not.persistence.repository;
 
+import com.pick_me_not.persistence.entity.Participant;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -14,4 +15,6 @@ public interface ParticipantRepository extends JpaRepository<Participant, Long> 
 	Optional<Participant> findByRoomIdAndNickname(Long roomId, String nickname);
 
 	boolean existsByRoomIdAndNickname(Long roomId, String nickname);
+
+	long countByRoomId(Long roomId);
 }

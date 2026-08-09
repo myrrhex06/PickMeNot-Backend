@@ -67,4 +67,13 @@ public class Room {
 	public void close() {
 		this.status = RoomStatus.CLOSED;
 	}
+
+	public void validateJoinable(LocalDateTime now) {
+		if (status != RoomStatus.WAITING) {
+			throw new IllegalStateException("대기 중인 방에만 참여할 수 있습니다.");
+		}
+		if (!expiresAt.isAfter(now)) {
+			throw new IllegalStateException("만료된 방에는 참여할 수 없습니다.");
+		}
+	}
 }

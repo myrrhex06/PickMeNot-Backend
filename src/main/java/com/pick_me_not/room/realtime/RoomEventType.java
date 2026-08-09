@@ -1,0 +1,9 @@
+package com.pick_me_not.room.realtime;
+
+public enum RoomEventType {
+	PARTICIPANT_JOINED,
+	PARTICIPANT_CONNECTED,
+	PARTICIPANT_DISCONNECTED,
+	ROOM_STATUS_CHANGED,
+	ROOM_CLOSED
+}

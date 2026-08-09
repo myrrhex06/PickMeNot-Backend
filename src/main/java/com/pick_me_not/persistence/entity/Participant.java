@@ -50,12 +50,26 @@ public class Participant {
 		this.room = room;
 		this.nickname = nickname;
 		this.host = host;
-		this.connected = true;
+		this.connected = false;
 		this.joinedAt = joinedAt;
 		this.lastSeenAt = joinedAt;
 	}
 
 	public static Participant createHost(Room room, String nickname, LocalDateTime joinedAt) {
 		return new Participant(room, nickname, true, joinedAt);
+	}
+
+	public static Participant join(Room room, String nickname, LocalDateTime joinedAt) {
+		return new Participant(room, nickname, false, joinedAt);
+	}
+
+	public void connect(LocalDateTime connectedAt) {
+		this.connected = true;
+		this.lastSeenAt = connectedAt;
+	}
+
+	public void disconnect(LocalDateTime disconnectedAt) {
+		this.connected = false;
+		this.lastSeenAt = disconnectedAt;
 	}
 }

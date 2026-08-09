@@ -14,6 +14,20 @@ public interface ParticipantSessionRepository extends JpaRepository<ParticipantS
 	Optional<ParticipantSession> findByTokenHashAndRevokedAtIsNullAndExpiresAtAfter(
 			String tokenHash, LocalDateTime now);
 
+	@Query("""
+			select ps from ParticipantSession ps
+			join fetch ps.participant p
+			join fetch p.room r
+			where ps.tokenHash = :tokenHash
+			  and ps.revokedAt is null
+			  and ps.expiresAt > :now
+			  and r.status <> com.pick_me_not.common.enums.RoomStatus.CLOSED
+			  and r.expiresAt > :now
+			""")
+	Optional<ParticipantSession> findActiveSession(
+			@Param("tokenHash") String tokenHash,
+			@Param("now") LocalDateTime now);
+
 	List<ParticipantSession> findAllByParticipantIdAndRevokedAtIsNull(Long participantId);
 
 	@Query("""

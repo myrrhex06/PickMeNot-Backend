@@ -6,7 +6,10 @@ import com.pick_me_not.common.util.ResponseUtil;
 import com.pick_me_not.room.service.RoomService;
 import com.pick_me_not.room.dto.CreateRoomRequest;
 import com.pick_me_not.room.dto.CreateRoomResponse;
+import com.pick_me_not.room.dto.JoinRoomRequest;
+import com.pick_me_not.room.dto.JoinRoomResponse;
 import com.pick_me_not.room.dto.RoomResponse;
+import com.pick_me_not.room.dto.RoomParticipantsResponse;
 import com.pick_me_not.room.dto.UpdateRoomRequest;
 import jakarta.validation.Valid;
 import io.swagger.v3.oas.annotations.Operation;
@@ -53,6 +56,43 @@ public class RoomController {
 	public ResponseEntity<CommonResponse<CreateRoomResponse>> create(@Valid @RequestBody CreateRoomRequest request) {
 		CreateRoomResponse response = roomService.create(request);
 		return ResponseUtil.success(HttpStatus.CREATED, "방 생성에 성공했습니다.", response);
+	}
+
+	@PostMapping("/{roomCode}/participants")
+	@Operation(summary = "방 참여", description = "대기 중인 방에 닉네임으로 참여하고 참가자 인증 토큰을 발급합니다.")
+	@ApiResponses({
+		@ApiResponse(responseCode = "201", description = "방 참여 성공"),
+		@ApiResponse(responseCode = "400", description = "요청 검증 실패",
+					content = @Content(schema = @Schema(implementation = CommonResponse.class))),
+		@ApiResponse(responseCode = "404", description = "방을 찾을 수 없음",
+					content = @Content(schema = @Schema(implementation = CommonResponse.class))),
+		@ApiResponse(responseCode = "409", description = "참여 불가 상태 또는 닉네임 중복",
+					content = @Content(schema = @Schema(implementation = CommonResponse.class)))
+	})
+	public ResponseEntity<CommonResponse<JoinRoomResponse>> join(
+			@Parameter(description = "방 코드", example = "A1B2C3", in = ParameterIn.PATH, required = true)
+			@PathVariable String roomCode,
+			@Valid @RequestBody JoinRoomRequest request) {
+		JoinRoomResponse response = roomService.join(roomCode, request);
+		return ResponseUtil.success(HttpStatus.CREATED, "방 참여에 성공했습니다.", response);
+	}
+
+	@GetMapping("/{roomCode}/participants")
+	@Operation(summary = "참가자 목록 조회", description = "인증된 참가자가 방의 현재 참가자 및 접속 상태를 조회합니다.")
+	@SecurityRequirement(name = OpenApiConfig.PARTICIPANT_TOKEN_SCHEME)
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "참가자 목록 조회 성공"),
+		@ApiResponse(responseCode = "403", description = "유효한 참가자 세션이 아니거나 다른 방의 토큰",
+					content = @Content(schema = @Schema(implementation = CommonResponse.class))),
+		@ApiResponse(responseCode = "404", description = "방을 찾을 수 없음",
+					content = @Content(schema = @Schema(implementation = CommonResponse.class)))
+	})
+	public ResponseEntity<CommonResponse<RoomParticipantsResponse>> getParticipants(
+			@Parameter(description = "방 코드", example = "A1B2C3", in = ParameterIn.PATH, required = true)
+			@PathVariable String roomCode,
+			@Parameter(hidden = true) @RequestHeader(PARTICIPANT_TOKEN_HEADER) String participantToken) {
+		RoomParticipantsResponse response = roomService.getParticipants(roomCode, participantToken);
+		return ResponseUtil.success(HttpStatus.OK, "참가자 목록 조회에 성공했습니다.", response);
 	}
 
 	@GetMapping("/{roomCode}")

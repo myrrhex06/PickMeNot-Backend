@@ -2,6 +2,7 @@ package com.pick_me_not.room.realtime;
 
 import com.pick_me_not.common.enums.RoomStatus;
 import com.pick_me_not.room.dto.ParticipantResponse;
+import com.pick_me_not.roulette.dto.RouletteRoundResponse;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -17,4 +18,5 @@ public class RoomEvent {
 	private final RoomStatus roomStatus;
 	private final long participantCount;
 	private final ParticipantResponse participant;
+	private final RouletteRoundResponse rouletteRound;
 }

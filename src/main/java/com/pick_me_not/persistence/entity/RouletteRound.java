@@ -9,7 +9,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
@@ -18,10 +20,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "roulette_rounds")
 @Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RouletteRound {
 
 	@Id
@@ -52,4 +51,43 @@ public class RouletteRound {
 
 	@Column(name = "duration_ms", nullable = false)
 	private int durationMs;
+
+	private RouletteRound(
+			Room room,
+			Participant executedBy,
+			Penalty selectedPenalty,
+			String penaltySnapshot,
+			String rouletteSnapshot,
+			LocalDateTime startedAt,
+			int durationMs
+	) {
+		this.room = room;
+		this.executedBy = executedBy;
+		this.selectedPenalty = selectedPenalty;
+		this.penaltySnapshot = penaltySnapshot;
+		this.rouletteSnapshot = rouletteSnapshot;
+		this.startedAt = startedAt;
+		this.durationMs = durationMs;
+	}
+
+	public static RouletteRound start(
+			Room room,
+			Participant executedBy,
+			Penalty selectedPenalty,
+			String rouletteSnapshot,
+			LocalDateTime startedAt,
+			int durationMs
+	) {
+		if (durationMs <= 0) {
+			throw new IllegalArgumentException("룰렛 진행 시간은 0보다 커야 합니다.");
+		}
+		return new RouletteRound(
+				room,
+				executedBy,
+				selectedPenalty,
+				selectedPenalty.getContent(),
+				rouletteSnapshot,
+				startedAt,
+				durationMs);
+	}
 }
